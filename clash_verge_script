@@ -139,6 +139,14 @@ const ruleProviders = {
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
     path: "./ruleset/loyalsoldier/applications.yaml"
   },
+  
+  // X / Twitter：blackmatrix7 规则，包含 x.com 等
+  Twitter: {
+    ...ruleProviderCommon,
+    behavior: "classical",
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Twitter/Twitter.yaml",
+    path: "./ruleset/blackmatrix7/Twitter.yaml"
+  },
 
   // Bahamut / B站港澳台 继续用你原来的
   bahamut: {
@@ -217,10 +225,13 @@ const customDomainSuffix = {
   ],
   "AI": [
     // "gemini.google.com",
-    "ping0.cc",
   ],
   "TikTok": [
     // "tiktokv.com",
+  ],
+  "X(Twitter)": [
+    // "x.com",
+    // "twitter.com",
   ],
   "微软服务": [
     // "copilot.microsoft.com",
@@ -286,6 +297,7 @@ const baseRules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
+  "RULE-SET,Twitter,X(Twitter)",
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
@@ -385,6 +397,15 @@ function main(config) {
       proxies: ["节点选择", "socks5"],
       "include-all": true,
       icon: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
+    },
+    {
+      ...groupBaseOption,
+      name: "X(Twitter)",
+      type: "select",
+      // 可以在这里手动选：节点选择 / 家宽(socks5) / 直连
+      proxies: ["节点选择", "socks5", "全局直连"],
+      "include-all": true,
+      icon: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/Twitter.svg"
     },
     {
       ...groupBaseOption,
