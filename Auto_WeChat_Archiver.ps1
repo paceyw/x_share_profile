@@ -52,12 +52,18 @@ if (-not (Test-Path $destRoot)) { New-Item -ItemType Directory -Path $destRoot |
 # ==========================================
 # 通用分类映射表 (扩展名 -> 类别)
 $fileTypeMap = @{
-    "文档" = @("docx", "doc", "pdf", "xlsx", "xls", "ppt", "pptx", "txt", "csv", "rtf", "zip", "rar", "7z")
-    "视频" = @("mp4", "avi", "mov", "dat", "mkv", "flv", "wmv", "3gp", "rmvb")
-    "图片" = @("jpg", "jpeg", "png", "bmp", "gif", "tif", "tiff", "webp", "heic")
+    "图片"     = @("jpg", "jpeg", "png", "bmp", "gif", "tif", "tiff", "webp", "heic", "psd", "dng", "ico", "nef", "svg")
+    "视频"     = @("mp4", "avi", "mov", "dat", "mkv", "flv", "wmv", "3gp", "rmvb")
+    "文档"     = @("docx", "doc", "ppt", "pptx", "txt", "csv", "rtf", "html", "md", "json", "odf", "pdf", "wps", "xmind", "log", "ofd", "mhtml")
+    "表格"     = @("xlsx", "xls", "et")
+    "音频"     = @("flac", "m4a", "mp3", "wav")
+    "压缩文件" = @("zip", "rar", "7z")
+    "应用"     = @("exe", "msi", "apk", "crx", "dmg", "dpx")
+    "图书"     = @("awb", "azw3", "epub", "mobi")
+    "字体"     = @("ttc", "ttf")
 }
 
-$allCategories = @("文档", "视频", "图片", "其他")
+$allCategories = @("图片", "视频", "文档", "表格", "音频", "压缩文件", "应用", "图书", "字体", "其他")
 
 foreach ($cat in $allCategories) {
     if (-not (Test-Path "$destRoot\$cat")) { New-Item -ItemType Directory -Path "$destRoot\$cat" | Out-Null }
@@ -159,14 +165,21 @@ foreach ($wxFolder in $targetFolders) {
             }
             $hashTable[$hash] = $true
 
-            # 智能分类 (通用标准)
+            # 智能分类 (精细化标准)
             $targetSub = "其他"
             $ext = $file.Extension.TrimStart(".").ToLower()
-            
-            foreach ($cat in $fileTypeMap.Keys) {
-                if ($fileTypeMap[$cat] -contains $ext) { 
-                    $targetSub = $cat
-                    break 
+            $fname = $file.Name.ToLower()
+
+            # 特殊规则：微信重命名的APK文件
+            if ($fname.EndsWith(".apk.1") -or $fname.EndsWith(".apk.1.1")) {
+                $targetSub = "应用"
+            } 
+            else {
+                foreach ($cat in $fileTypeMap.Keys) {
+                    if ($fileTypeMap[$cat] -contains $ext) { 
+                        $targetSub = $cat
+                        break 
+                    }
                 }
             }
 
