@@ -201,3 +201,5 @@ Write-Host "  处理失败文件: " -NoNewline; Write-Host "$($counters.Errors)"
 Write-Host "  归档存储位置: $destRoot"
 Write-Host "  日志文件路径: $logFile"
 Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "`n按任意键退出..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
